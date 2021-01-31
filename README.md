@@ -8,7 +8,7 @@ Install
 -------
 
 ```bash
-npm install --save ppp-mocha-framework
+npm install --save ppp-webpack-packager
 ```
 
 Usage
