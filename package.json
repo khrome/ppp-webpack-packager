@@ -1,6 +1,6 @@
 {
     "name": "ppp-webpack-packager",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "webpack.js",
     "dependencies": {
         "webpack": "^5.17.0",

@@ -8,7 +8,7 @@ try{
     var p = path.resolve('.webpack.config.js' );
     wpconfig = require(p);
 }catch(ex){
-    console.log(ex);
+    throw new Error('Could not load webpack('+p+')'+"\n"+ex.message);
 }
 module.exports = {
     compileSource : function(dependencies, cb){
@@ -18,24 +18,24 @@ module.exports = {
         imports.unshift('window._imports = {}');
         imports.unshift('window.require = function(m){ return window._imports[m] }');
         tmp.file(function(err, rootPath, fd, cleanupCallback){
-          if(err) throw err;
-          var imp = imports.join(";\n");
-          fs.writeFile(rootPath, imp, function(err){
-              if(err) throw err;
-              var config = wpconfig({}, {mode:'development'});
-              config.entry = rootPath;
-              webpack(config, function(err, stats){
-                  if(err || stats.hasErrors()){
-                      console.log('Errors: ', err, stats);
-                      return cb(err || stats.compilation.errors[0]);
-                  }
-                  var storedPath = path.resolve(config.output.path, config.output.filename);
-                  fs.readFile(storedPath, function(err, body){
-                      cleanupCallback();
-                      cb(null, body.toString());
-                  });
-              });
-          });
+            if(err) throw err;
+            var imp = imports.join(";\n");
+            fs.writeFile(rootPath, imp, function(err){
+                if(err) throw err;
+                var config = wpconfig({}, {mode:'development'});
+                config.entry = rootPath;
+                webpack(config, function(err, stats){
+                    if(err || stats.hasErrors()){
+                        console.log('Errors: ', err, stats);
+                        return cb(err || stats.compilation.errors[0]);
+                    }
+                    var storedPath = path.resolve(config.output.path, config.output.filename);
+                    fs.readFile(storedPath, function(err, body){
+                        cleanupCallback();
+                        cb(null, body.toString());
+                    });
+                });
+            });
         });
     }
 }
